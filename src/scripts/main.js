@@ -8,7 +8,7 @@ const options = {
   method: 'GET',
 };
 
-const listOfPhones = document.createElement('ul');
+const list = document.createElement('ul');
 
 const getPhones = () => {
   return new Promise((resolve, reject) => {
@@ -26,25 +26,27 @@ const getPhones = () => {
   });
 };
 
-const createListOfPhones = (data) => {
-  listOfPhones.insertAdjacentHTML('afterbegin', `
-     ${data.map(phone => phone.name).map(item => `<li>${item}</li>`).join(' ')}
-   `);
+const createListOfPhones = (phones) => {
+  list.insertAdjacentHTML('afterbegin', `
+     ${phones.map(phone => phone.name).map(item => `
+        <li>${item}</li>
+    `).join(' ')}
+  `);
 
-  document.body.append(listOfPhones);
+  document.body.append(list);
 
-  return data;
+  return phones;
 };
 
-const getPhonesDetails = (list) => {
-  const fetchedList = list.map(phone => phone.id)
-    .map(id => fetch(`${phonesUrl}/phones/${id}.json`));
+const getPhonesDetails = (ids) => {
+  const fetchedList = ids.map(id => fetch(`${phonesUrl}/phones/${id}.json`));
 
   return Promise.all(fetchedList);
 };
 
 getPhones()
   .then(createListOfPhones)
+  .then(phones => phones.map(phone => phone.id))
   .then(getPhonesDetails)
   .catch(error => {
     alert(error);
