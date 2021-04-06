@@ -49,5 +49,5 @@ getPhones()
   .then(phones => phones.map(phone => phone.id))
   .then(getPhonesDetails)
   .catch(error => {
-    alert(error);
+    throw new Error(error);
   });
